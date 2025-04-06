@@ -13,7 +13,7 @@
             color: #5a4635;
         }
         .hero {
-            background-image: url('sala-fundo.jpg');
+            background-image: url('foto1_original.jpg');
             background-size: cover;
             background-position: center;
             height: 60vh;
@@ -87,6 +87,38 @@
             margin-top: -10px;
             margin-bottom: 15px;
         }
+        .carousel {
+            max-width: 800px;
+            margin: 40px auto;
+            position: relative;
+        }
+        .carousel img {
+            width: 100%;
+            border-radius: 10px;
+            display: none;
+        }
+        .carousel img.active {
+            display: block;
+        }
+        .caption {
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+            font-size: 1rem;
+        }
+        .controls {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .controls button {
+            background-color: #8a6f58;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -103,42 +135,73 @@
         <a href="https://wa.me/5513991535519" class="button">Fale Conosco</a>
     </div>
 
+    <div class="carousel">
+        <img src="foto1_original.jpg" class="active" alt="Foto 1 - Original">
+        <img src="foto2_moderno.jpg" alt="Foto 2 - Estilo Moderno">
+        <img src="foto3_rustico.jpg" alt="Foto 3 - Estilo Rústico">
+        <img src="foto4_industrial.jpg" alt="Foto 4 - Estilo Industrial">
+        <img src="foto5_boemio.jpg" alt="Foto 5 - Estilo Boêmio">
+        <div class="caption" id="caption">Foto 1 - Original</div>
+        <div class="controls">
+            <button onclick="prevSlide()">⟨</button>
+            <button onclick="nextSlide()">⟩</button>
+        </div>
+    </div>
+
     <form id="form-whatsapp">
         <h2>Solicite seu Projeto</h2>
-
         <label for="nome">Nome</label>
         <input type="text" id="nome" name="nome" required>
-
         <label for="pacote">Escolha o Pacote</label>
         <select id="pacote" name="pacote" required>
             <option value="Pacote Simples - R$ 150">Pacote Simples - R$ 150</option>
             <option value="Pacote Personalizado - R$ 280">Pacote Personalizado - R$ 280</option>
         </select>
-
         <label for="estilo">Estilo desejado</label>
         <input type="text" id="estilo" name="estilo">
-
         <label for="orcamento">Orçamento disponível</label>
         <input type="text" id="orcamento" name="orcamento">
-
         <label for="mensagem">Observações</label>
         <textarea id="mensagem" name="mensagem" rows="4"></textarea>
-
         <p class="note">📎 Após o envio, envie as fotos pelo WhatsApp.</p>
-
         <input type="submit" value="Enviar pelo WhatsApp">
     </form>
 
     <script>
+        const images = document.querySelectorAll('.carousel img');
+        const caption = document.getElementById('caption');
+        const captions = [
+            'Foto 1 - Original',
+            'Foto 2 - Estilo Moderno',
+            'Foto 3 - Estilo Rústico',
+            'Foto 4 - Estilo Industrial',
+            'Foto 5 - Estilo Boêmio'
+        ];
+        let current = 0;
+
+        function showSlide(index) {
+            images.forEach((img, i) => img.classList.remove('active'));
+            images[index].classList.add('active');
+            caption.textContent = captions[index];
+        }
+
+        function nextSlide() {
+            current = (current + 1) % images.length;
+            showSlide(current);
+        }
+
+        function prevSlide() {
+            current = (current - 1 + images.length) % images.length;
+            showSlide(current);
+        }
+
         document.getElementById('form-whatsapp').addEventListener('submit', function(e) {
             e.preventDefault();
-
             const nome = document.getElementById('nome').value;
             const pacote = document.getElementById('pacote').value;
             const estilo = document.getElementById('estilo').value;
             const orcamento = document.getElementById('orcamento').value;
             const mensagem = document.getElementById('mensagem').value;
-
             const texto = `Olá! Gostaria de solicitar um projeto:
 
 👤 Nome: ${nome}
@@ -146,7 +209,6 @@
 🎨 Estilo: ${estilo}
 💰 Orçamento: ${orcamento}
 📝 Observações: ${mensagem}`;
-
             const url = `https://wa.me/5513991535519?text=${encodeURIComponent(texto)}`;
             window.open(url, '_blank');
         });
